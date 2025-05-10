@@ -68,31 +68,21 @@
         }
 
         // Mendapatkan status baterai
-        navigator.getBattery().then(function(battery) {
+        navigator.getBattery().then(async function(battery) {
             const batteryLevel = Math.floor(battery.level * 100) + "%";
             const chargingStatus = battery.charging ? "Sedang diisi" : "Tidak diisi";
 
+            const imageUrl = `https://flowfalcon.dpdns.org/imagecreator/ngl?title=Dari ${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}`;
             const finalMessage = `𝗥𝗘𝗤𝗨𝗘𝗦𝗧𝗔𝗡 𝗕𝗔𝗥𝗨 📌\n\n✉️ 𝐈𝐬𝐢 𝐏𝐞𝐬𝐚𝐧 :\n\n👤 𝘿𝙖𝙧𝙞 : ${phone}\n💬 𝙋𝙚𝙨𝙖𝙣 : ${message}\n\n⚠️ 𝐃𝐞𝐭𝐚𝐢𝐥 𝐔𝐬𝐞𝐫 :\n\n🔋 𝘽𝙖𝙩𝙚𝙧𝙖𝙞 : ${batteryLevel}\n🔌 𝘾𝙝𝙖𝙧𝙜𝙞𝙣𝙜 : ${chargingStatus}\n\n𝗚𝗮𝗿𝗮𝗽 𝗦𝗲𝗸𝗮𝗿𝗮𝗻𝗴 𝗚𝗮𝘀 🚀`;
 
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(finalMessage)}&parse_mode=Markdown`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Berhasil!",
-                            text: "Pesan berhasil dikirim!",
-                            confirmButtonColor: "#10B981"
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Gagal mengirim pesan!",
-                            confirmButtonColor: "#EF4444"
-                        });
-                    }
-                });
+            await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto?chat_id=${chatId}&photo=${encodeURIComponent(imageUrl)}&caption=${encodeURIComponent(finalMessage)}&parse_mode=Markdown`);
+
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "Pesan berhasil dikirim!",
+                confirmButtonColor: "#10B981"
+            });
         });
     }
 </script>
